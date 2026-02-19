@@ -1,4 +1,5 @@
 ## タスク要素
+
 - タイトル
 - 概要
 - ユーザーストーリー
@@ -9,252 +10,292 @@
 ### TASK-1: FSDディレクトリ構成の整備
 
 #### 概要
+
 FSD（Feature Sliced Design）のレイヤー構成（shared, entities, features, widgets）のディレクトリを作成し、tsconfig.jsonにパスエイリアスを追加する。shadcn/uiの出力先をFSD構成に合わせて更新する。
 
 #### ユーザーストーリー
+
 N/A（インフラ基盤）
 
 #### 完了条件
-- [ ] `src/shared`, `src/entities`, `src/features`, `src/widgets` ディレクトリが作成されている
-- [ ] tsconfig.jsonにFSD各レイヤーのパスエイリアスが設定されている
-- [ ] `components.json` のaliasesがFSD構成に合わせて更新されている（shadcn/uiコンポーネントが `src/shared/ui` 配下に生成される）
-- [ ] 既存の `lib/utils.ts` が `src/shared/lib/` に移動されている
-- [ ] `pnpm build` がエラーなく完了する
+
+- `src/shared`, `src/entities`, `src/features`, `src/widgets` ディレクトリが作成されている
+- tsconfig.jsonにFSD各レイヤーのパスエイリアスが設定されている
+- `components.json` のaliasesがFSD構成に合わせて更新されている（shadcn/uiコンポーネントが `src/shared/ui` 配下に生成される）
+- 既存の `lib/utils.ts` が `src/shared/lib/` に移動されている
+- `pnpm build` がエラーなく完了する
 
 ---
 
 ### TASK-2: Supabaseクライアント・認証基盤のセットアップ
 
 #### 概要
+
 `@supabase/supabase-js` と `@supabase/ssr` をインストールし、SSR対応のSupabaseクライアント（ブラウザ用・サーバー用）をshared層に作成する。環境変数の設定とmiddlewareによるセッション管理を構築する。
 
 #### ユーザーストーリー
+
 N/A（インフラ基盤）
 
 #### 完了条件
-- [ ] `@supabase/supabase-js` と `@supabase/ssr` がインストールされている
-- [ ] `src/shared/api/supabase/client.ts`（ブラウザ用）が作成されている
-- [ ] `src/shared/api/supabase/server.ts`（サーバー用）が作成されている
-- [ ] middleware.tsが配置され、認証トークンの自動リフレッシュが動作する
-- [ ] `.env.local` に `NEXT_PUBLIC_SUPABASE_URL` と `NEXT_PUBLIC_SUPABASE_ANON_KEY` が設定されている
-- [ ] サーバーコンポーネントからSupabaseクライアントを通じて認証状態が取得できる
-- [ ] `pnpm build` がエラーなく完了する
+
+- `@supabase/supabase-js` と `@supabase/ssr` がインストールされている
+- `src/shared/api/supabase/client.ts`（ブラウザ用）が作成されている
+- `src/shared/api/supabase/server.ts`（サーバー用）が作成されている
+- middleware.tsが配置され、認証トークンの自動リフレッシュが動作する
+- `.env.local` に `NEXT_PUBLIC_SUPABASE_URL` と `NEXT_PUBLIC_SUPABASE_ANON_KEY` が設定されている
+- サーバーコンポーネントからSupabaseクライアントを通じて認証状態が取得できる
+- `pnpm build` がエラーなく完了する
 
 ---
 
 ### TASK-3: Drizzle ORM導入とデータベーススキーマ定義
 
 #### 概要
+
 Drizzle ORMとZodをインストールし、Supabase Postgres接続を設定する。MVP全体で使用するテーブル（profiles, topics, conversations, messages, roadmaps, sections, materials）のスキーマを定義し、マイグレーションを適用する。
 
 #### ユーザーストーリー
+
 N/A（インフラ基盤）
 
 #### 完了条件
-- [ ] `drizzle-orm`, `postgres`, `zod` がインストールされている（`drizzle-kit` はdev依存）
-- [ ] `src/shared/api/db/` 配下にDB接続とスキーマ定義が作成されている
-- [ ] `drizzle.config.ts` がプロジェクトルートに配置されている
-- [ ] `profiles` テーブル: id, display_name, created_at, updated_at
-- [ ] `topics` テーブル: id, user_id, title, status (drafting/generating/active/archived), created_at, updated_at
-- [ ] `conversations` テーブル: id, topic_id, created_at
-- [ ] `messages` テーブル: id, conversation_id, role (user/assistant), content, created_at
-- [ ] `roadmaps` テーブル: id, topic_id, overview, created_at
-- [ ] `sections` テーブル: id, roadmap_id, title, order, created_at
-- [ ] `materials` テーブル: id, section_id, content (markdown), created_at
-- [ ] RLSポリシーが設定されている
-- [ ] マイグレーションがSupabaseに正常に適用されている
+
+- `drizzle-orm`, `postgres`, `zod` がインストールされている（`drizzle-kit` はdev依存）
+- `src/shared/api/db/` 配下にDB接続とスキーマ定義が作成されている
+- `drizzle.config.ts` がプロジェクトルートに配置されている
+- `profiles` テーブル: id, display_name, created_at, updated_at
+- `topics` テーブル: id, user_id, title, status (drafting/generating/active/archived), created_at, updated_at
+- `conversations` テーブル: id, topic_id, created_at
+- `messages` テーブル: id, conversation_id, role (user/assistant), content, created_at
+- `roadmaps` テーブル: id, topic_id, overview, created_at
+- `sections` テーブル: id, roadmap_id, title, order, created_at
+- `materials` テーブル: id, section_id, content (markdown), created_at
+- RLSポリシーが設定されている
+- マイグレーションがSupabaseに正常に適用されている
 
 ---
 
 ### TASK-4: 共有UIコンポーネントとレイアウト基盤
 
 #### 概要
+
 shadcn/uiから必要な基本コンポーネントをFSD shared層にインストールし、アプリ全体の共通レイアウト（ヘッダー）をwidgets層に構築する。
 
 #### ユーザーストーリー
+
 N/A（インフラ基盤）
 
 #### 完了条件
-- [ ] shadcn/ui の基本コンポーネントが `src/shared/ui/` 配下にインストールされている
-- [ ] `src/widgets/header/` にアプリヘッダーコンポーネントが作成されている
-- [ ] `app/layout.tsx` がヘッダーwidgetを組み込んだレイアウトに更新されている
-- [ ] 未認証時とログイン時でヘッダーの表示が切り替わる仕組みが実装されている
-- [ ] レスポンシブデザインが基本的に対応している
-- [ ] `pnpm build` がエラーなく完了する
+
+- shadcn/ui の基本コンポーネントが `src/shared/ui/` 配下にインストールされている
+- `src/widgets/header/` にアプリヘッダーコンポーネントが作成されている
+- `app/layout.tsx` がヘッダーwidgetを組み込んだレイアウトに更新されている
+- 未認証時とログイン時でヘッダーの表示が切り替わる仕組みが実装されている
+- レスポンシブデザインが基本的に対応している
+- `pnpm build` がエラーなく完了する
 
 ---
 
 ### TASK-5: ユーザー登録・ログイン機能
 
 #### 概要
+
 メールアドレスとパスワードによるサインアップ・ログインのUI（features層）とServer Actionsを実装する。メール確認フロー用のRoute Handlerを含む。
 
 #### ユーザーストーリー
+
 ユーザーとして、アカウントを作成してログインしたい。学習の進捗やコンテンツを自分のアカウントに紐づけるために。
 
 #### 完了条件
-- [ ] `src/features/auth/` に認証関連のUI・ロジックが配置されている
-- [ ] `app/(auth)/login/page.tsx` にログイン・サインアップフォームが実装されている
-- [ ] フォームバリデーションがZodで実装されている
-- [ ] Server Actionでsupabase.auth.signInWithPassword / signUpが呼び出されている
-- [ ] メール確認トークンのverifyOtpが処理されている
-- [ ] ログイン成功時にダッシュボードへリダイレクトされる
-- [ ] ログイン失敗時にエラーメッセージが表示される
-- [ ] サインアップ時にprofilesテーブルにレコードが作成される
-- [ ] `pnpm build` がエラーなく完了する
+
+- `src/features/auth/` に認証関連のUI・ロジックが配置されている
+- `app/(auth)/login/page.tsx` にログイン・サインアップフォームが実装されている
+- フォームバリデーションがZodで実装されている
+- Server Actionでsupabase.auth.signInWithPassword / signUpが呼び出されている
+- メール確認トークンのverifyOtpが処理されている
+- ログイン成功時にダッシュボードへリダイレクトされる
+- ログイン失敗時にエラーメッセージが表示される
+- サインアップ時にprofilesテーブルにレコードが作成される
+- `pnpm build` がエラーなく完了する
 
 ---
 
 ### TASK-6: ログアウトと認証ガード
 
 #### 概要
+
 ログアウト機能と、認証が必要なページへのアクセスガードを実装する。ヘッダーのユーザーメニューにログアウトボタンを配置する。
 
 #### ユーザーストーリー
+
 ユーザーとして、ログアウトしたい。共有端末での利用時にデータを保護するために。
 
 #### 完了条件
-- [ ] ログアウト処理が実装されている
-- [ ] ヘッダーのユーザーメニューにログアウトボタンが表示される
-- [ ] ログアウト後にログイン画面へリダイレクトされる
-- [ ] 未認証状態で保護されたページにアクセスするとログイン画面へリダイレクトされる
-- [ ] ログイン済み状態でログイン画面にアクセスするとダッシュボードへリダイレクトされる
-- [ ] `pnpm build` がエラーなく完了する
+
+- ログアウト処理が実装されている
+- ヘッダーのユーザーメニューにログアウトボタンが表示される
+- ログアウト後にログイン画面へリダイレクトされる
+- 未認証状態で保護されたページにアクセスするとログイン画面へリダイレクトされる
+- ログイン済み状態でログイン画面にアクセスするとダッシュボードへリダイレクトされる
+- `pnpm build` がエラーなく完了する
 
 ---
 
 ### TASK-7: トピック作成と対話開始
 
 #### 概要
+
 ユーザーがトピック名を入力して新しい学習トピックを作成し、AIとの対話セッションを開始するUIとServer Actionsを実装する。
 
 #### ユーザーストーリー
+
 ユーザーとして、気になったトピック（例：「ミクロ経済学」）をAIに伝えたい。学習の出発点を作るために。
 
 #### 完了条件
-- [ ] `src/entities/topic/` にトピックの型定義・データアクセス関数が配置されている
-- [ ] `src/features/create-topic/` にトピック作成のUI・ロジックが配置されている
-- [ ] ダッシュボードに「新しいトピックを始める」入力フォームが表示される
-- [ ] トピック名のバリデーションが動作する（空文字不可、最大100文字）
-- [ ] Server Actionでtopicsテーブルとconversationsテーブルにレコードが作成される（status: drafting）
-- [ ] 作成成功後に対話画面へ遷移する
-- [ ] `pnpm build` がエラーなく完了する
+
+- `src/entities/topic/` にトピックの型定義・データアクセス関数が配置されている
+- `src/features/create-topic/` にトピック作成のUI・ロジックが配置されている
+- ダッシュボードに「新しいトピックを始める」入力フォームが表示される
+- トピック名のバリデーションが動作する（空文字不可、最大100文字）
+- Server Actionでtopicsテーブルとconversationsテーブルにレコードが作成される（status: drafting）
+- 作成成功後に対話画面へ遷移する
+- `pnpm build` がエラーなく完了する
 
 ---
 
 ### TASK-8: AI対話による学習方針の策定
 
 #### 概要
+
 Vercel AI SDKを導入し、ユーザーとAIのチャットUIを実装する。AIはトピックに基づいて学習の目的・深さ・範囲についてヒアリングし、学習方針を提案する。対話履歴はmessagesテーブルに保存される。
 
 #### ユーザーストーリー
+
 ユーザーとして、AIと対話しながら学習の目的・深さ・範囲を絞り込みたい。自分に合った学び方を見つけるために。
 
 #### 完了条件
-- [ ] `ai` パッケージ（Vercel AI SDK）がインストールされている
-- [ ] `src/entities/message/` にメッセージの型定義・データアクセス関数が配置されている
-- [ ] `src/features/chat/` にチャットUIとストリーミングロジックが配置されている
-- [ ] `app/(main)/topics/[topicId]/chat/page.tsx` にチャット画面が実装されている
-- [ ] ユーザーのメッセージ送信とAIの応答がストリーミングで表示される
-- [ ] 対話履歴がmessagesテーブルに永続化される
-- [ ] AIのシステムプロンプトが学習方針策定に適した内容で設定されている
-- [ ] ページ再訪時に過去の対話履歴が復元される
-- [ ] `pnpm build` がエラーなく完了する
+
+- `ai` パッケージ（Vercel AI SDK）がインストールされている
+- `src/entities/message/` にメッセージの型定義・データアクセス関数が配置されている
+- `src/features/chat/` にチャットUIとストリーミングロジックが配置されている
+- `app/(main)/topics/[topicId]/chat/page.tsx` にチャット画面が実装されている
+- ユーザーのメッセージ送信とAIの応答がストリーミングで表示される
+- 対話履歴がmessagesテーブルに永続化される
+- AIのシステムプロンプトが学習方針策定に適した内容で設定されている
+- ページ再訪時に過去の対話履歴が復元される
+- `pnpm build` がエラーなく完了する
 
 ---
 
 ### TASK-9: 学習方針の確認・修正・確定
 
 #### 概要
+
 AIが提案した学習方針をユーザーが確認・修正できるUIを実装する。確定ボタンを押すとトピックのstatusが`generating`に遷移し、ソース生成フローへ進む。
 
 #### ユーザーストーリー
+
 - ユーザーとして、AIが提案した学習方針を確認・修正したい。納得した上で学習を始めるために。
 - ユーザーとして、学習方針を確定して次のステップに進みたい。教材生成をトリガーするために。
 
 #### 完了条件
-- [ ] `src/features/confirm-plan/` に学習方針確定のUI・ロジックが配置されている
-- [ ] AIが学習方針を提案した際に構造化されたサマリーがチャット内に表示される
-- [ ] ユーザーが修正リクエストをチャットで送信でき、AIが方針を更新する
-- [ ] 「この方針で始める」ボタンが表示され、押下するとtopicのstatusが `generating` に更新される
-- [ ] status更新後に生成中画面へ遷移する
-- [ ] `pnpm build` がエラーなく完了する
+
+- `src/features/confirm-plan/` に学習方針確定のUI・ロジックが配置されている
+- AIが学習方針を提案した際に構造化されたサマリーがチャット内に表示される
+- ユーザーが修正リクエストをチャットで送信でき、AIが方針を更新する
+- 「この方針で始める」ボタンが表示され、押下するとtopicのstatusが `generating` に更新される
+- status更新後に生成中画面へ遷移する
+- `pnpm build` がエラーなく完了する
 
 ---
 
 ### TASK-10: ロードマップの自動生成
 
 #### 概要
+
 確定した学習方針に基づいてAIがロードマップ（セクション一覧と概要）を自動生成するロジックを実装する。生成結果はroadmaps/sectionsテーブルに保存される。
 
 #### ユーザーストーリー
+
 ユーザーとして、確定した学習方針からロードマップを自動生成してほしい。全体像を把握するために。
 
 #### 完了条件
-- [ ] `src/entities/roadmap/` にロードマップの型定義・データアクセス関数が配置されている
-- [ ] `src/features/generate-roadmap/` にロードマップ生成のロジックが配置されている
-- [ ] AIに対話履歴と学習方針を渡し、構造化されたロードマップJSONを生成するプロンプトが実装されている
-- [ ] 生成結果がroadmapsテーブルとsectionsテーブルに保存される
-- [ ] 生成中のプログレス表示が実装されている
-- [ ] ロードマップ生成完了後に教材生成が自動的に開始される
-- [ ] `pnpm build` がエラーなく完了する
+
+- `src/entities/roadmap/` にロードマップの型定義・データアクセス関数が配置されている
+- `src/features/generate-roadmap/` にロードマップ生成のロジックが配置されている
+- AIに対話履歴と学習方針を渡し、構造化されたロードマップJSONを生成するプロンプトが実装されている
+- 生成結果がroadmapsテーブルとsectionsテーブルに保存される
+- 生成中のプログレス表示が実装されている
+- ロードマップ生成完了後に教材生成が自動的に開始される
+- `pnpm build` がエラーなく完了する
 
 ---
 
 ### TASK-11: 各セクション教材の自動生成
 
 #### 概要
+
 ロードマップの各セクションに対してAIが教材（Markdownコンテンツ）を順次自動生成するロジックを実装する。生成完了後にtopicのstatusを`active`に更新する。
 
 #### ユーザーストーリー
+
 ユーザーとして、ロードマップの各セクションの教材を自動生成してほしい。すぐに学習を始められるようにするために。
 
 #### 完了条件
-- [ ] `src/entities/material/` に教材の型定義・データアクセス関数が配置されている
-- [ ] `src/features/generate-materials/` に教材生成のロジックが配置されている
-- [ ] 各セクションに対してAIがMarkdown形式の教材を生成するプロンプトが実装されている
-- [ ] 生成結果がmaterialsテーブルに保存される
-- [ ] 生成中画面にセクションごとの生成進捗が表示される
-- [ ] 全セクションの生成完了後にtopicのstatusが `active` に更新される
-- [ ] 生成完了後にトピック詳細画面へ自動遷移する
-- [ ] `pnpm build` がエラーなく完了する
+
+- `src/entities/material/` に教材の型定義・データアクセス関数が配置されている
+- `src/features/generate-materials/` に教材生成のロジックが配置されている
+- 各セクションに対してAIがMarkdown形式の教材を生成するプロンプトが実装されている
+- 生成結果がmaterialsテーブルに保存される
+- 生成中画面にセクションごとの生成進捗が表示される
+- 全セクションの生成完了後にtopicのstatusが `active` に更新される
+- 生成完了後にトピック詳細画面へ自動遷移する
+- `pnpm build` がエラーなく完了する
 
 ---
 
 ### TASK-12: 教材閲覧画面
 
 #### 概要
+
 生成された教材を読みやすい形式で閲覧するUIを実装する。サイドバーにロードマップのセクション一覧を表示し、各セクションの教材をMarkdownレンダリングで表示する。
 
 #### ユーザーストーリー
+
 ユーザーとして、生成された教材を読みやすい形式で閲覧したい。学習に集中するために。
 
 #### 完了条件
-- [ ] `src/widgets/roadmap-sidebar/` にサイドバーコンポーネントが配置されている
-- [ ] `src/features/view-material/` に教材表示のUI・ロジックが配置されている
-- [ ] トピック詳細画面にロードマップ概要が表示される
-- [ ] セクション詳細画面にMarkdownコンテンツが正しくレンダリングされる
-- [ ] サイドバーから各セクションへのナビゲーションが動作する
-- [ ] 前のセクション/次のセクションへのナビゲーションが表示される
-- [ ] レスポンシブデザインでモバイル時はサイドバーが折りたたみ式になる
-- [ ] `pnpm build` がエラーなく完了する
+
+- `src/widgets/roadmap-sidebar/` にサイドバーコンポーネントが配置されている
+- `src/features/view-material/` に教材表示のUI・ロジックが配置されている
+- トピック詳細画面にロードマップ概要が表示される
+- セクション詳細画面にMarkdownコンテンツが正しくレンダリングされる
+- サイドバーから各セクションへのナビゲーションが動作する
+- 前のセクション/次のセクションへのナビゲーションが表示される
+- レスポンシブデザインでモバイル時はサイドバーが折りたたみ式になる
+- `pnpm build` がエラーなく完了する
 
 ---
 
 ### TASK-13: トピック一覧とダッシュボード
 
 #### 概要
+
 ダッシュボードにユーザーが作成したトピックの一覧を表示する機能を実装する。各トピックのステータスに応じた表示と、適切な画面へのナビゲーションを提供する。
 
 #### ユーザーストーリー
+
 - ユーザーとして、複数のトピックを管理したい。異なる関心事を並行して学ぶために。
 - ユーザーとして、過去に学んだトピックの一覧を見たい。学習履歴を振り返るために。
 
 #### 完了条件
-- [ ] `src/features/topic-list/` にトピック一覧のUI・ロジックが配置されている
-- [ ] ダッシュボードにトピック一覧がカード形式で表示される
-- [ ] 各トピックカードにタイトル、ステータスバッジ、作成日が表示される
-- [ ] ステータスに応じて適切な画面にナビゲーションされる（drafting→対話、generating→生成中、active→教材閲覧）
-- [ ] トピックが0件の場合は空状態のUIが表示される
-- [ ] トピック一覧は作成日の降順で表示される
-- [ ] `pnpm build` がエラーなく完了する
+
+- `src/features/topic-list/` にトピック一覧のUI・ロジックが配置されている
+- ダッシュボードにトピック一覧がカード形式で表示される
+- 各トピックカードにタイトル、ステータスバッジ、作成日が表示される
+- ステータスに応じて適切な画面にナビゲーションされる（drafting→対話、generating→生成中、active→教材閲覧）
+- トピックが0件の場合は空状態のUIが表示される
+- トピック一覧は作成日の降順で表示される
+- `pnpm build` がエラーなく完了する
+

@@ -1,15 +1,7 @@
-import { createClient } from "@shared/api";
-
-export default async function Page() {
-	const supabase = await createClient();
-
-	const { data: todos } = await supabase.from("todos").select();
-
+export default function Page() {
 	return (
-		<ul>
-			{todos?.map((todo) => (
-				<li key={todo.id}>{todo}</li>
-			))}
-		</ul>
+		<div>
+			<h1>Scaffold</h1>
+		</div>
 	);
 }
